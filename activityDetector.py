@@ -21,3 +21,20 @@ def check_browser_homepage():
             print(f"An error occurred while checking {browser} settings: {e}")
 
 check_browser_homepage()
+
+def monitor_network_activity(threshold=1024*1024):
+    print("Monitoring network activity...")
+    old_data = psutil.net_io_counters()
+    time.sleep(10)  # Monitor every 10 seconds
+    new_data = psutil.net_io_counters()
+
+    sent = new_data.bytes_sent - old_data.bytes_sent
+    recv = new_data.bytes_recv - old_data.bytes_recv
+
+    print(f"Bytes sent in last ten seconds: {sent}")
+    print(f"Bytes received in last ten seconds: {recv}")
+
+    if sent > threshold or recv > threshold:
+        print("Warning: Unusual network activity detected!")
+
+monitor_network_activity()
