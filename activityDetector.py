@@ -4,7 +4,7 @@ import time
 import os
 import json
 
-def check_browser_homepage():
+def check_browser_homepage(): #adjust
     browsers = {
         "Chrome": r"Software\Policies\Google\Chrome",
         "Firefox": r"Software\Policies\Mozilla\Firefox",
@@ -42,7 +42,7 @@ def monitor_network_activity(threshold=1024*1024):
 monitor_network_activity()
 
 def check_chrome_extensions():
-    chrome_extensions_path = os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions')
+    chrome_extensions_path = os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions') #adjust
     
     if not os.path.exists(chrome_extensions_path):
         print("Chrome extensions path not found.")
@@ -58,3 +58,46 @@ def check_chrome_extensions():
             print(f"Manifest file not found for extension: {extension}")
 
 check_chrome_extensions()
+
+def check_firefox_addons():
+    firefox_profile_path = os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') #adjust
+    
+    if not os.path.exists(firefox_profile_path):
+        print("Firefox profile path not found.")
+        return
+    
+    for profile in os.listdir(firefox_profile_path):
+        addons_path = os.path.join(firefox_profile_path, profile, 'extensions.json')
+        if os.path.exists(addons_path):
+            with open(addons_path, 'r') as file:
+                addons = json.load(file)
+                for addon in addons.get('addons', []):
+                    print(f"Addon: {addon.get('name', 'Unknown')}, Version: {addon.get('version', 'Unknown')}")
+        else:
+            print(f"Add-ons file not found for profile: {profile}")
+
+check_firefox_addons()
+
+def scan_for_suspicious_files(directories, threshold=24*60*60):
+    current_time = time.time()
+    
+    for directory in directories:
+        if not os.path.exists(directory):
+            print(f"Directory {directory} does not exist.")
+            continue
+        
+        for root, _, files in os.walk(directory):
+            for file in files:
+                file_path = os.path.join(root, file)
+                file_stat = os.stat(file_path)
+                
+                # Check if the file was modified within the threshold
+                if current_time - file_stat.st_mtime < threshold:
+                    print(f"Suspicious file detected: {file_path}")
+
+directories_to_scan = [
+    os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default'), #adjust
+    os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') #adjust
+]
+
+scan_for_suspicious_files(directories_to_scan)
