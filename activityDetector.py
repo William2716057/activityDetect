@@ -1,6 +1,8 @@
 import winreg
 import psutil
 import time
+import os
+import json
 
 def check_browser_homepage():
     browsers = {
@@ -38,3 +40,21 @@ def monitor_network_activity(threshold=1024*1024):
         print("Warning: Unusual network activity detected!")
 
 monitor_network_activity()
+
+def check_chrome_extensions():
+    chrome_extensions_path = os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions')
+    
+    if not os.path.exists(chrome_extensions_path):
+        print("Chrome extensions path not found.")
+        return
+
+    for extension in os.listdir(chrome_extensions_path):
+        manifest_path = os.path.join(chrome_extensions_path, extension, 'manifest.json')
+        if os.path.exists(manifest_path):
+            with open(manifest_path, 'r') as file:
+                manifest = json.load(file)
+                print(f"Extension: {manifest.get('name', 'Unknown')}, Version: {manifest.get('version', 'Unknown')}")
+        else:
+            print(f"Manifest file not found for extension: {extension}")
+
+check_chrome_extensions()
