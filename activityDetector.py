@@ -80,12 +80,15 @@ check_firefox_addons()
 
 def scan_for_suspicious_files(directories, threshold=24*60*60):
     current_time = time.time()
-    
+    results = []
+
     for directory in directories:
         if not os.path.exists(directory):
-            print(f"Directory {directory} does not exist.")
+            message = f"Directory {directory} does not exist."
+            print(message)
+            results.append(message)
             continue
-        
+
         for root, _, files in os.walk(directory):
             for file in files:
                 file_path = os.path.join(root, file)
@@ -93,11 +96,17 @@ def scan_for_suspicious_files(directories, threshold=24*60*60):
                 
                 # Check if the file was modified within the threshold
                 if current_time - file_stat.st_mtime < threshold:
-                    print(f"Suspicious file detected: {file_path}")
+                    message = f"Suspicious file detected: {file_path}"
+                    print(message)
+                    results.append(message)
+
+    with open("scan_results.txt", "w") as result_file:
+        for result in results:
+            result_file.write(result + "\n")
 
 directories_to_scan = [
-    os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default'), #adjust
-    os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') #adjust
+    os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default'), # adjust
+    os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') # adjust
 ]
 
 scan_for_suspicious_files(directories_to_scan)
