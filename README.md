@@ -18,3 +18,7 @@ The script includes features to check browser settings in the registry, monitor 
 
 5. Scan for Suspicious Files:
 - Scans specified directories for files modified within the last 24 hours and logs their paths.
+
+## Prerequisites
+- Python 3.x
+- psutil library 
