@@ -22,3 +22,19 @@ The script includes features to check browser settings in the registry, monitor 
 ## Prerequisites
 - Python 3.x
 - psutil library 
+
+## Usage
+1. Clone the Repository:
+```
+git clone https://github.com/William2716057/activityDetect.git
+```
+
+2. Install Required Packages:
+```
+pip install psutil
+```
+
+Run the Script:
+```
+python3 activityDetect.py
+```
