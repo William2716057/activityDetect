@@ -38,3 +38,7 @@ Run the Script:
 ```
 python3 activityDetect.py
 ```
+
+# Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request or report an issue.
