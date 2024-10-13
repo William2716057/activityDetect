@@ -3,6 +3,7 @@ import psutil
 import time
 import os
 import json
+import datetime
 
 def check_browser_homepage(): #adjust
     browsers = {
@@ -99,14 +100,14 @@ def scan_for_suspicious_files(directories, threshold=24*60*60):
                     message = f"Suspicious file detected: {file_path}"
                     print(message)
                     results.append(message)
-
-    with open("scan_results.txt", "w") as result_file:
+    reportDate = datetime.datetime.now()
+    with open("scan_results{reportDate}.txt", "w") as result_file:
         for result in results:
             result_file.write(result + "\n")
 
 directories_to_scan = [
     os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default'), # adjust
-    os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') # adjust
+    os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') # fix 
 ]
 
 scan_for_suspicious_files(directories_to_scan)
