@@ -5,6 +5,7 @@ import os
 import json
 import datetime
 
+#checks which browser is being used
 def check_browser_homepage(): #adjust
     browsers = {
         "Chrome": r"Software\Policies\Google\Chrome",
@@ -41,7 +42,7 @@ def monitor_network_activity(threshold=1024*1024):
         print("Warning: Unusual network activity detected!")
 
 monitor_network_activity()
-
+#return extensions for later check
 def check_chrome_extensions():
     chrome_extensions_path = os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions') #adjust
     
@@ -78,7 +79,7 @@ def check_firefox_addons():
             print(f"Add-ons file not found for profile: {profile}")
 
 check_firefox_addons()
-
+#checks for recently modified files that may indicate suspicious activities
 def scan_for_suspicious_files(directories, threshold=24*60*60):
     current_time = time.time()
     results = []
@@ -97,17 +98,26 @@ def scan_for_suspicious_files(directories, threshold=24*60*60):
                 
                 # Check if the file was modified within the threshold
                 if current_time - file_stat.st_mtime < threshold:
-                    message = f"Suspicious file detected: {file_path}"
+                    message = f"Recently modified files: {file_path}"
                     print(message)
                     results.append(message)
     reportDate = datetime.datetime.now()
-    with open("scan_results{reportDate}.txt", "w") as result_file:
+    
+    formatted_date = f"{reportDate.month}_{reportDate.day}_{reportDate.year % 100}"
+    formatted_time = f"{reportDate.hour}_{reportDate.minute}_{reportDate.second}"
+    filename = f"scan_results{formatted_date}_{formatted_time}.txt"
+    
+    with open(filename, "w") as result_file: #fix
         for result in results:
             result_file.write(result + "\n")
 
 directories_to_scan = [
     os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default'), # adjust
-    os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') # fix 
+    #os.path('C:\Windows\System32')
+    #os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') # fix, not exist 
 ]
-
 scan_for_suspicious_files(directories_to_scan)
+
+#directory = r"C:\Windows\System32"
+
+#Prompt = "write a report on whether any of this is abnormal, what should be checked further and what should be done"
