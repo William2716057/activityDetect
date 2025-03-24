@@ -1,44 +1,80 @@
-# Browser Security and Network Monitoring Script
+# Windows System Monitoring and Threat Detection
 
-A Python script that provides functionalities to monitor browser homepages, network activity, browser extensions, and suspicious file modifications on a Windows system. 
-The script includes features to check browser settings in the registry, monitor network data, list installed Chrome extensions and Firefox add-ons, and scan specified directories for suspicious files.
+A Python-based tool designed to monitor system activity, check browser settings, track network usage, and identify file modifications. It can be used for security analysis and investigation of potential malicious or suspicious activity on a Windows machine.
 
 ## Features
-1. Check Browser Homepage:
-- Inspects the homepage settings for Chrome, Firefox, and Internet Explorer from the Windows registry.
 
-2. Monitor Network Activity:
-- Monitors network data sent and received every 10 seconds and alerts if the data exceeds a specified threshold.
+### 1. Browser Homepage Check
+- Identifies the homepage settings for:
+  - **Google Chrome**
+  - **Mozilla Firefox**
+  - **Internet Explorer**
+- Helps detect unauthorized changes that may indicate a browser hijacking attempt.
 
-3. Check Chrome Extensions:
-- Lists all installed Chrome extensions with their names and versions by reading the manifest.json files.
+### 2. Network Activity Monitoring
+- Monitors outgoing and incoming network traffic using `psutil`.
+- Alerts when data transfer exceeds a specified threshold (default: 1MB in 10 seconds).
 
-4. Check Firefox Add-ons:
-- Lists all installed Firefox add-ons with their names and versions by reading the extensions.json files in each Firefox profile.
+### 3. Chrome Extension Inspection
+- Retrieves and displays installed Chrome extensions with their names and versions by reading `manifest.json` files.
 
-5. Scan for Suspicious Files:
-- Scans specified directories for files modified within the last 24 hours and logs their paths.
+### 4. Firefox Add-on Inspection
+- Identifies installed Firefox add-ons by reading the `extensions.json` file in Firefox profiles.
 
-## Prerequisites
-- Python 3.x
-- psutil library 
+### 5. Suspicious File Scanner
+- Scans specified directories for files modified within the last 24 hours.
+- Generates a detailed report of these files for further investigation.
+
+### 6. Windows Event Log Analysis
+- Retrieves critical system events from the Windows Event Log, including:
+  - System shutdowns
+  - Unexpected shutdowns
+  - Logon events
+  - Policy changes
+  - Process creation and termination
+- Focuses on key event IDs such as `6006`, `6008`, `4624`.
+
+## Installation
+1. Clone the repository:
+   ```bash
+   https://github.com/William2716057/activityDetect.git
+   cd windows-monitoring-tool
+   ```
+2. Install required dependencies:
+   ```bash
+   pip install psutil pywin32
+   ```
 
 ## Usage
-1. Clone the Repository:
-```
-git clone https://github.com/William2716057/activityDetect.git
-```
-
-2. Install Required Packages:
-```
-pip install psutil
+Run the script with:
+```bash
+python monitor.py
 ```
 
-Run the Script:
+### Recommended Directories for File Scanning
+Add the following directories to `directories_to_scan` for enhanced monitoring:
+- `C:\Windows\System32`
+- `C:\Users\<username>\AppData\Local\Google\Chrome\User Data\Default`
+- `C:\Users\<username>\AppData\Roaming\Mozilla\Firefox\Profiles`
+
+## Sample Output
 ```
-python3 activityDetect.py
+Chrome homepage is set to: https://example.com
+Bytes sent in last ten seconds: 2048
+Warning: Unusual network activity detected!
+Extension: AdBlock, Version: 5.1.0
+Addon: uBlock Origin, Version: 1.47.3
+Recently modified files: C:\Users\User\AppData\Local\Google\Chrome\User Data\Default\example.dll
+TimeGenerated: 2025-03-20 14:12:45, EventID: 4624
 ```
 
-# Contributing
+## Security Recommendations
+- Regularly review homepage settings and browser extensions.
+- Investigate unusual network spikes.
+- Cross-check modified files for suspicious behavior.
+- Review Windows Event Logs for unexpected logon attempts or shutdowns.
 
-Contributions are welcome! Please feel free to submit a Pull Request or report an issue.
+## Disclaimer
+This tool is intended for legitimate security monitoring and educational purposes only. Use it responsibly.
+
+
