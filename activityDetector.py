@@ -4,6 +4,10 @@ import time
 import os
 import json
 import datetime
+import win32evtlog
+
+#add memory usage checker 
+#run netstat 
 
 #checks which browser is being used
 def check_browser_homepage(): #adjust
@@ -117,6 +121,39 @@ directories_to_scan = [
     #os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles') # fix, not exist 
 ]
 scan_for_suspicious_files(directories_to_scan)
+
+end_time = datetime.datetime.now()
+start_time = end_time - datetime.timedelta(days=1)
+
+#add more 
+event_ids = {6006, 6008, 6005, 4624, 4719, 4907, 4946, 4688, 4689 }
+
+server = 'localhost'  # For local machine
+log_type = 'System'
+log_handle = win32evtlog.OpenEventLog(server, log_type)
+
+flags = win32evtlog.EVENTLOG_FORWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
+
+events = []
+while True:
+    records = win32evtlog.ReadEventLog(log_handle, flags, 0)
+    if not records:
+        break
+    for record in records:
+        event_id = record.EventID & 0xFFFF  # Extract event ID
+        event_time = record.TimeGenerated
+        # Check if event occurred in the last 24 hours and matches one of the event IDs
+        if event_id in event_ids and start_time <= event_time < end_time:
+            events.append({
+                "TimeGenerated": event_time,
+                "EventID": event_id,
+            })
+            
+win32evtlog.CloseEventLog(log_handle)
+
+# Display results
+for event in events:
+    print(f"TimeGenerated: {event['TimeGenerated']}, EventID: {event['EventID']}")
 
 #directory = r"C:\Windows\System32"
 
