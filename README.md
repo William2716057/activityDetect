@@ -38,7 +38,7 @@ A Python-based tool designed to monitor system activity, check browser settings,
 1. Clone the repository:
    ```bash
    https://github.com/William2716057/activityDetect.git
-   cd windows-monitoring-tool
+   cd /activityDetector
    ```
 2. Install required dependencies:
    ```bash
